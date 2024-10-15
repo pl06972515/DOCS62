@@ -18,71 +18,155 @@
 >| `Error`  | [ 应用因出现未被处理异常而终止，但整个应用不至于崩溃 - 非系统级别 ] (`EG: 当前操作代码异常`) |
 >| `Fatal`  | [ 致命错误 ]可能会导致系统或应用程序崩溃(`需要引起足够重视的`) |
 >
->---
->
-><span style='color:Blue'>[ 配置介绍`Nlog.config`]</span>
->
->```xml
-><?xml version="1.0" encoding="utf-8" ?>
-><!-- XSD manual extracted from package NLog.Schema: https://www.nuget.org/packages/NLog.Schema-->
-><nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xsi:schemaLocation="NLog NLog.xsd"
->      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
->      autoReload="true"
->      internalLogLevel="Info" >
->     <extensions>
->    
->     </extensions>
->     <!-- 日志目标输出 -->
->     <targets async="true">
->          <!-- write logs to file -->
->          <target xsi:type="File" name="logfile" fileName="${currentdir}\Log\${date:format=yyyy-MM-dd}.json">
->               <layout xsi:type="JsonLayout">
->                    <attribute name="Time" layout="${date:format=yyyy-MM-dd HH\:mm\:ss}" />
->                    <attribute name="Level" layout="${level}"/>
->                    <attribute name="Logger" layout="${logger}"/>
->                    <attribute name="Message" layout="${message}" />
->                    <attribute name="Exception" layout="${exception:format=tostring}" />
->                    
->               </layout>
->          </target>
->
->          <target xsi:type="ColoredConsole" name="Default_Console"
->                  layout="[${date:format=yyyy-MM-dd HH\:mm\:ss}] ${MicrosoftConsoleLayout}">
->               <!--<highlight-row condition="level == LogLevel.Info" foregroundColor="Green"/>
->               <highlight-row condition="level == LogLevel.Warn" foregroundColor="Yellow"/>
->               <highlight-row condition="level == LogLevel.Error" foregroundColor="Red"/>-->
->               <highlight-row condition="level == LogLevel.Error" backgroundColor="NoChange" foregroundColor="NoChange"/>
->               <highlight-row condition="level == LogLevel.Fatal" backgroundColor="NoChange" foregroundColor="NoChange"/>
->               <highlight-row condition="level == LogLevel.Warn" backgroundColor="NoChange" foregroundColor="NoChange"/>
->
->               <highlight-word text="info" condition="level == LogLevel.Info" backgroundColor="NoChange" foregroundColor="Green" ignoreCase="true" regex="info" wholeWords="true" compileRegex="true"/>
->               <highlight-word text="warn" condition="level == LogLevel.Warn" backgroundColor="NoChange" foregroundColor="Yellow" ignoreCase="true" regex="warn" wholeWords="true" compileRegex="true"/>
->               <highlight-word text="fail" condition="level == LogLevel.Error" backgroundColor="NoChange" foregroundColor="Red" ignoreCase="true" regex="fail" wholeWords="true" compileRegex="true"/>
->               <highlight-word text="crit" condition="level == LogLevel.Fatal" backgroundColor="NoChange" foregroundColor="DarkRed" ignoreCase="true" regex="crit" wholeWords="true" compileRegex="true"/>
->
->          </target>
->     </targets>
->
->     <!-- 日志路由规则 -->
->     <rules>
->          <logger name="*" minlevel="Trace" writeTo="Default_Console, logfile" />
->     </rules>
-></nlog>
->
->
->```
->
->```csharp
->IServiceProvider provider = new ServiceCollection()
->                            .AddLogging(builder => {
->                                  builder.AddNLog("Nlog.config");
->                                 
->                             })
->                            .BuildServiceProvider();
->
->
->```
->
->
->
 ><br/>
+
+<!-- tabs:start -->
+
+#### **Nlog.config**
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- XSD manual extracted from package NLog.Schema: https://www.nuget.org/packages/NLog.Schema-->
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xsi:schemaLocation="NLog NLog.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    autoReload="true"             <!-- NLog 配置文件发生变化,是否自动加载 -->
+    internalLogLevel="Info"       <!-- NLog 内部日志用于 [ 调试 NLog 本身的问题 ] -->
+    internalLogFile="${basedir}/internal-nlog.txt"
+    throwConfigExceptions="true"> <!-- NLog 配置文件出错时是否抛出异常 -->
+
+    <!-- 配置：输出目标 -->
+    <targets async="true">
+       <target xsi:type="File" name="logfile" fileName="${currentdir}\Log\${date:format=yyyy-MM-dd}.json">
+	        <layout xsi:type="JsonLayout">
+			    <attribute name="Time" layout="${date:format=yyyy-MM-dd HH\:mm\:ss}" />
+			    <attribute name="Level" layout="${level:uppercase=true}"/>
+			    <attribute name="Logger" layout="${logger}"/>
+			    <attribute name="Message" layout="${message}" />
+			    <attribute name="Exception" layout="${exception:format=tostring}" />
+
+	       </layout>
+      </target>
+
+   </targets>
+
+   <!-- 日志路由规则 -->
+   <rules>
+      <logger name="*" minlevel="Trace" writeTo="Default_Console" />
+   </rules>
+    
+</nlog>
+
+
+
+```
+
+>```csharp
+>using Microsoft.Extensions.DependencyInjection;
+>using Microsoft.Extensions.Logging;
+>using NLog.Extensions.Logging;
+>
+>IServiceProvider provider = new ServiceCollection()
+>                           .AddLogging(builder => {
+>                                builder.ClearProviders();
+>                                builder.AddNLog("Nlog.config");
+>
+>                            })
+>                           .BuildServiceProvider();
+>
+>ILogger<Program> logger = provider.GetRequiredService<ILogger<Program>>();
+>logger.Log(LogLevel.Information,"{@Name} :Hello World", new { Name = "张三", Age = 20 });
+>
+>
+>```
+>
+>
+>
+>
+
+
+
+#### **Appsettings.json**
+
+[<span style='color:#008B00'>[👓 配置说明 ]</span>](https://github.com/NLog/NLog.Extensions.Logging/wiki/NLog-configuration-with-appsettings.json ':target=_blank')
+
+```json
+{
+
+	 "Logging": {
+		  "LogLevel": {
+			   "Default": "Debug"
+		  },
+		  "NLog": {
+			   "IncludeScopes": true,
+			   "RemoveLoggerFactoryFilter": true
+		  }
+	 },
+	 "NLog": {
+		  "autoReload": true,
+		  "internalLogLevel": "Info",
+		  "internalLogFile": "${basedir}/internal-nlog.txt",
+		  "throwConfigExceptions": true,
+
+		  "targets": {
+
+			   "Default_Console": {
+					"type": "Console",
+					"layout": "[${date:format=yyyy-MM-dd HH\\:mm\\:ss}] ${MicrosoftConsoleLayout}"
+			   }
+		  },
+
+		  "rules": [
+			   {
+					"logger": "*",
+					"minLevel": "Trace",
+					"writeTo": "Default_Console"
+			   }
+		  ]
+
+	 }
+	 
+}
+
+
+```
+
+>```csharp
+>using Microsoft.Extensions.Configuration;
+>using Microsoft.Extensions.DependencyInjection;
+>using Microsoft.Extensions.Logging;
+>using NLog.Extensions.Logging;
+>
+>var config = new ConfigurationBuilder()
+>                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+>                .Build();
+>
+>IServiceProvider provider = new ServiceCollection()
+>                           .AddLogging(builder => {
+>                                builder.ClearProviders();
+>                                builder.SetMinimumLevel(LogLevel.Trace);
+>                                //builder.AddNLog("Nlog.config");
+>                                builder.AddNLog(config);
+>                            })
+>                           .BuildServiceProvider();
+>
+>ILogger<Program> logger = provider.GetRequiredService<ILogger<Program>>();
+>using (logger.BeginScope("ScopeId:{ScopeId}", Guid.NewGuid()))
+>{
+>     logger.Log(LogLevel.Information, "{@Name} :Hello World", new { Name = "张三", Age = 20 });
+>}
+>
+>
+>```
+>
+>
+>
+>
+
+
+
+
+
+<!-- tabs:end -->
+
+
+
