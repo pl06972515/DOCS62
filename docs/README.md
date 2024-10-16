@@ -7,7 +7,7 @@
 
 >[!WARNING|style: flat|label: 简要说明 ]
 >
->[<span style='color:#008B00'>[👓 官方文档 ]</span>](https://github.com/NLog/NLog/wiki ':target=_blank') [<span style='color:#008B00'>[👓 NuGet - NLog.Extensions.Logging ]</span>](https://github.com/NLog/NLog.Extensions.Logging ':target=_blank') 
+>[<span style='color:#008B00'>[👓 官方文档 ]</span>](https://github.com/NLog/NLog/wiki ':target=_blank') [<span style='color:#008B00'>[👓 NuGet -  NLog.Extensions.Logging ]</span>](https://github.com/NLog/NLog.Extensions.Logging ':target=_blank')
 >
 >| 日志等级 | 事件描述                                                     |
 >| -------- | ------------------------------------------------------------ |
@@ -35,134 +35,61 @@
     throwConfigExceptions="true"> <!-- NLog 配置文件出错时是否抛出异常 -->
 
     <!-- 配置：输出目标 -->
-    <targets async="true">
-       <target xsi:type="File" name="logfile" fileName="${currentdir}\Log\${date:format=yyyy-MM-dd}.json">
-	        <layout xsi:type="JsonLayout">
-			    <attribute name="Time" layout="${date:format=yyyy-MM-dd HH\:mm\:ss}" />
-			    <attribute name="Level" layout="${level:uppercase=true}"/>
-			    <attribute name="Logger" layout="${logger}"/>
-			    <attribute name="Message" layout="${message}" />
-			    <attribute name="Exception" layout="${exception:format=tostring}" />
-
-	       </layout>
-      </target>
-
-   </targets>
-
-   <!-- 日志路由规则 -->
-   <rules>
-      <logger name="*" minlevel="Trace" writeTo="Default_Console" />
-   </rules>
+    <targets async="true" />
+    <!-- 日志路由规则 -->
+    <rules />
     
 </nlog>
 
 
-
 ```
 
->```csharp
->using Microsoft.Extensions.DependencyInjection;
->using Microsoft.Extensions.Logging;
->using NLog.Extensions.Logging;
->
->IServiceProvider provider = new ServiceCollection()
->                           .AddLogging(builder => {
->                                builder.ClearProviders();
->                                builder.AddNLog("Nlog.config");
->
->                            })
->                           .BuildServiceProvider();
->
->ILogger<Program> logger = provider.GetRequiredService<ILogger<Program>>();
->logger.Log(LogLevel.Information,"{@Name} :Hello World", new { Name = "张三", Age = 20 });
->
->
->```
->
->
->
->
 
 
+#### **appsettings.json**
 
-#### **Appsettings.json**
-
-[<span style='color:#008B00'>[👓 配置说明 ]</span>](https://github.com/NLog/NLog.Extensions.Logging/wiki/NLog-configuration-with-appsettings.json ':target=_blank')
+[<span style='color:#008B00'>[👓 官方说明 ]</span>](https://github.com/NLog/NLog.Extensions.Logging/wiki/NLog-configuration-with-appsettings.json ':target=_blank')
 
 ```json
 {
 
-	 "Logging": {
-		  "LogLevel": {
-			   "Default": "Debug"
-		  },
-		  "NLog": {
-			   "IncludeScopes": true,
-			   "RemoveLoggerFactoryFilter": true
-		  }
-	 },
-	 "NLog": {
-		  "autoReload": true,
-		  "internalLogLevel": "Info",
-		  "internalLogFile": "${basedir}/internal-nlog.txt",
-		  "throwConfigExceptions": true,
+     "Logging": {
+          "LogLevel": {
+               "Default": "Debug"
+          },
+          "NLog": {
+               "IncludeScopes": true,
+               "RemoveLoggerFactoryFilter": true
+          }
+     },
+     "NLog": {
+          "autoReload": true,
+          "internalLogLevel": "Info",
+          "internalLogFile": "${basedir}/internal-nlog.txt",
+          "throwConfigExceptions": true,
 
-		  "targets": {
+          "targets": {
 
-			   "Default_Console": {
-					"type": "Console",
-					"layout": "[${date:format=yyyy-MM-dd HH\\:mm\\:ss}] ${MicrosoftConsoleLayout}"
-			   }
-		  },
+               "Default_Console": {
+                    "type": "Console",
+                    "layout": "[${date:format=yyyy-MM-dd HH\\:mm\\:ss}] ${MicrosoftConsoleLayout}"
+               }
+          },
 
-		  "rules": [
-			   {
-					"logger": "*",
-					"minLevel": "Trace",
-					"writeTo": "Default_Console"
-			   }
-		  ]
+          "rules": [
+               {
+                    "logger": "*",
+                    "minLevel": "Trace",
+                    "writeTo": "Default_Console"
+               }
+          ]
 
-	 }
-	 
+     }
+     
 }
 
 
 ```
-
->```csharp
->using Microsoft.Extensions.Configuration;
->using Microsoft.Extensions.DependencyInjection;
->using Microsoft.Extensions.Logging;
->using NLog.Extensions.Logging;
->
->var config = new ConfigurationBuilder()
->                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
->                .Build();
->
->IServiceProvider provider = new ServiceCollection()
->                           .AddLogging(builder => {
->                                builder.ClearProviders();
->                                builder.SetMinimumLevel(LogLevel.Trace);
->                                //builder.AddNLog("Nlog.config");
->                                builder.AddNLog(config);
->                            })
->                           .BuildServiceProvider();
->
->ILogger<Program> logger = provider.GetRequiredService<ILogger<Program>>();
->using (logger.BeginScope("ScopeId:{ScopeId}", Guid.NewGuid()))
->{
->     logger.Log(LogLevel.Information, "{@Name} :Hello World", new { Name = "张三", Age = 20 });
->}
->
->
->```
->
->
->
->
-
-
 
 
 
