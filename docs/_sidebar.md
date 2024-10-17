@@ -5,6 +5,7 @@
 -  
 -  
 -  <span style='color:Blue'><img src="wwwroot/images/MB.svg" alt="" style="margin-bottom:-4px" />&nbsp;附录</span>
+-  [☢ [ Fluent API ]LogEventBuilder ](F1.0.0)
 -  
 
 
