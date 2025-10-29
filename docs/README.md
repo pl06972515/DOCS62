@@ -7,16 +7,19 @@
 
 >[!WARNING|style: flat|label: 简要说明 ]
 >
->[<span style='color:#008B00'>[👓 官方文档 ]</span>](https://github.com/NLog/NLog/wiki ':target=_blank') [<span style='color:#008B00'>[👓 NuGet -  NLog.Extensions.Logging ]</span>](https://github.com/NLog/NLog.Extensions.Logging ':target=_blank')
+>[<span style='color:#008B00'>[👓 官方文档 ]</span>](https://github.com/NLog/NLog/wiki ':target=_blank') 
+>
+>[<span style='color:#008B00'>[👓 NuGet -  NLog.Extensions.Logging ]</span>](https://github.com/NLog/NLog.Extensions.Logging ':target=_blank')
 >
 >| 日志等级 | 事件描述                                                     |
 >| -------- | ------------------------------------------------------------ |
->| `Trace`  | 辅助开发人员针对某个问题进行[ 代码跟踪调试 ] <span style='color:red'>[ 通常包含一些敏感信息 - 开发环境 ]</span> |
->| `Debug`  | [ 具有较短的失效性 ]记录一些辅助调试日志(`EG：某方法调用, 方法返回值`) |
+>| `Trace`  | 辅助开发人员针对某个问题进行 [ 代码跟踪调试 ] <span style='color:red'>[ 通常包含一些敏感信息 - 开发环境 ]</span> |
+>| `Debug`  | [ 具有较短的失效性 ] 记录一些辅助调试日志(`EG：某方法调用, 方法返回值`) |
+>| -        |                                                              |
 >| `Info`   | [`具有较长的失效性`]向管理员传达非关键信息( 如仅供参考之类的注释 ) (`EG: 信息可以用来跟踪一个完整的处理流程`) |
 >| `Warn`   | [ 应用出现不正常行为或非预期的结果 ] <span style='color:red'>[ 不对实际错误做出响应，警告应用程序未处于理想状态 → 进一步操作将导致关键性错误 ]</span> (`EG: 用户登陆未认证通过`) |
 >| `Error`  | [ 应用因出现未被处理异常而终止，但整个应用不至于崩溃 - 非系统级别 ] (`EG: 当前操作代码异常`) |
->| `Fatal`  | [ 致命错误 ]可能会导致系统或应用程序崩溃(`需要引起足够重视的`) |
+>| `Fatal`  | [ 致命错误 ] 可能会导致系统或应用程序崩溃(`需要引起足够重视的`) |
 >
 ><br/>
 
@@ -55,7 +58,7 @@
 
      "Logging": {
           "LogLevel": {
-               "Default": "Debug"
+               "Default": "Information"
           },
           "NLog": {
                "IncludeScopes": true,
@@ -68,21 +71,8 @@
           "internalLogFile": "${basedir}/internal-nlog.txt",
           "throwConfigExceptions": true,
 
-          "targets": {
-
-               "Default_Console": {
-                    "type": "Console",
-                    "layout": "[${date:format=yyyy-MM-dd HH\\:mm\\:ss}] ${MicrosoftConsoleLayout}"
-               }
-          },
-
-          "rules": [
-               {
-                    "logger": "*",
-                    "minLevel": "Trace",
-                    "writeTo": "Default_Console"
-               }
-          ]
+          "targets": { },  // 配置：输出目标
+          "rules": [ ]     // 日志路由规则
 
      }
      
