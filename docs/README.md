@@ -56,23 +56,17 @@
 ```json
 {
 
-     "Logging": {
-          "LogLevel": {
-               "Default": "Information"
-          },
-          "NLog": {
-               "IncludeScopes": true,
-               "RemoveLoggerFactoryFilter": true
-          }
-     },
      "NLog": {
           "autoReload": true,
           "internalLogLevel": "Info",
           "internalLogFile": "${basedir}/internal-nlog.txt",
           "throwConfigExceptions": true,
 
-          "targets": { },  // 配置：输出目标
-          "rules": [ ]     // 日志路由规则
+          "targets": { 
+              "async": true,
+              
+           }, 
+          "rules": [ ] 
 
      }
      
