@@ -3,7 +3,7 @@ window.$docsify = {
 
     repo: 'true',
     corner: {
-        url: "https://github.com/pl06972515/DOCS61",
+        url: "https://github.com/pl06972515/DOCS62",
         icon: "Github", //Github Gitlab Spring 
         //icon: "https://gitee.com/s_origins/ImageStorage/raw/master/PicGo_Typora/20201220213510.png",
         //width: 40,
@@ -22,7 +22,7 @@ window.$docsify = {
     subMaxLevel: 3,
 
     /*... 插件设置 ...*/
-    search: { placeholder: '标题检索', noData: '暂无数据!', depth: 3, namespace: 'DOCS61"', hideOtherSidebarContent: false },
+    search: { placeholder: '标题检索', noData: '暂无数据!', depth: 3, namespace: 'DOCS62"', hideOtherSidebarContent: false },
     copyCode: { buttonText: '点击复制', errorText: 'Error', successText: '已复制到剪贴板' },
     themeable: {
         readyTransition: true,
