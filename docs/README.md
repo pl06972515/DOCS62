@@ -7,9 +7,11 @@
 
 >[!WARNING|style: flat|label: 简要说明 ]
 >
->[<span style='color:#008B00'>[👓 官方文档 ]</span>](https://github.com/NLog/NLog/wiki ':target=_blank') 
+>- [<span style='color:#008B00'>[👓 官方文档 ]</span>](https://github.com/NLog/NLog/wiki ':target=_blank') [<span style='color:#008B00'>[👓 相关配置 ]</span>](https://nlog-project.org/config/?tab=layout-renderers ':target=_blank') 
 >
->[<span style='color:#008B00'>[👓 NuGet -  NLog.Extensions.Logging ]</span>](https://github.com/NLog/NLog.Extensions.Logging ':target=_blank')
+>  [`NuGet -  NLog.Extensions.Logging`]
+>
+>
 >
 >| <span style='color:Blue'>[ 日志等级 ]</span> | [ 事件描述 ]                                                 |
 >| -------------------------------------------- | ------------------------------------------------------------ |
